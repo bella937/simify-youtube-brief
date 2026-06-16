@@ -389,33 +389,51 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--navy);l
     .disc-item:first-child{border-top:none}
 </style>
 
+
+
 <style>
 @media print {
-  /* 1. Force backgrounds, images and colours to print */
+  /* 1. Force backgrounds and colours */
   *, *::before, *::after {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     color-adjust: exact !important;
+    animation: none !important;
+    transition: none !important;
   }
 
   /* 2. Page setup */
   @page { size: A4 portrait; margin: 14mm 16mm; }
-  html, body { margin: 0 !important; padding: 0 !important; width: 100% !important; }
+  html, body { margin: 0 !important; padding: 0 !important; }
 
-  /* 3. Hide non-content chrome */
-  .ticker-wrap  { display: none !important; }
-  .sticky-nav   { display: none !important; }
+  /* 3. Hide chrome / nav */
+  .ticker-wrap, .sticky-nav { display: none !important; }
 
-  /* 4. Kill animations/transitions */
-  *, *::before, *::after { animation: none !important; transition: none !important; }
-
-  /* 5. Remove shadows */
+  /* 4. Remove shadows */
   * { box-shadow: none !important; }
 
-  /* 6. Full-width content */
+  /* 5. Full-width layout */
   .page-body { max-width: 100% !important; padding: 16px 0 40px !important; }
 
-  /* 7. Prevent mid-element page breaks */
+  /* 6. HIDE ALL ASSET PREVIEW IMAGES — biggest cause of PDF hang */
+  .asset-preview { display: none !important; }
+  .asset-card {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding: 10px 14px !important;
+    border: 1px solid var(--cream-dark) !important;
+    border-radius: 12px !important;
+    break-inside: avoid !important;
+  }
+  .asset-info { padding: 0 !important; flex: 1 !important; }
+  .asset-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* 7. Keep hero/finish mascots but shrink them */
+  .hero-mascot  { max-height: 140px !important; max-width: 140px !important; object-fit: contain !important; }
+  .finish-mascot{ height: 70px  !important; object-fit: contain !important; }
+
+  /* 8. Prevent mid-element page breaks */
   .hero-card, .stats-row, .card, .step-card, .timeline-item,
   .tone-card, .asset-card, .finish-card, #brief-campaign-row,
   .hooks-list li, .check-list li, .cta-script, .script-example {
@@ -423,38 +441,17 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--navy);l
     page-break-inside: avoid !important;
   }
 
-  /* 8. Keep headings with their content */
+  /* 9. Keep headings with their content */
   .card-title, h2, h3, h4 { break-after: avoid !important; }
 
-  /* 9. Stat cards: force 2-col grid when 4+ cards would overflow */
-  .stats-row { grid-template-columns: repeat(2, 1fr) !important; }
-  #brief-campaign-row { grid-template-columns: repeat(2, 1fr) !important; }
+  /* 10. Stats rows — 2-column for A4 width */
+  .stats-row            { grid-template-columns: repeat(2, 1fr) !important; }
+  #brief-campaign-row   { grid-template-columns: repeat(2, 1fr) !important; }
 
-  /* 10. Asset grid: 2 columns in print */
-  .asset-grid { grid-template-columns: repeat(2, 1fr) !important; }
-
-  /* 11. Tone grid: single column so cards don't split */
+  /* 11. Tone grid */
   .tone-grid { grid-template-columns: 1fr 1fr !important; }
 
-  /* 12. Hero mascot — constrain so it doesn't overflow */
-  .hero-mascot  { max-height: 200px !important; object-fit: contain !important; }
-  .finish-mascot{ height: 80px  !important; object-fit: contain !important; }
-
-  /* 13. Video & iframe embeds in asset cards — hide, show label */
-  .asset-preview video,
-  .asset-preview iframe,
-  .asset-preview embed { display: none !important; }
-  .asset-preview.dark  { min-height: 60px !important; background: #1a1a1a !important; }
-  .asset-preview.dark::after {
-    content: 'Video file — download link below';
-    color: #aaa;
-    font-size: 11px;
-    display: block;
-    padding: 20px;
-    text-align: center;
-  }
-
-  /* 14. Download buttons — show as plain text links */
+  /* 12. Download buttons — show as plain links */
   .dl-btn {
     background: none !important;
     color: #2D3A4A !important;
@@ -463,10 +460,7 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--navy);l
     padding: 2px 8px !important;
     font-size: 10px !important;
     font-weight: 700 !important;
-    text-decoration: none !important;
-    display: inline-block !important;
   }
-  /* Show URL for anchor-based download buttons */
   a.dl-btn[href]::after {
     content: " — " attr(href);
     font-size: 8px;
@@ -474,9 +468,7 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--navy);l
     color: #888;
     display: block;
     word-break: break-all;
-    border: none;
   }
-  /* Note for JS-based image downloads (no href) */
   .dl-btn:not([href])::after {
     content: " (open brief in browser to download)";
     font-size: 9px;
@@ -484,29 +476,11 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--navy);l
     color: #888;
   }
 
-  /* 15. Checklist: show as clean text */
+  /* 13. Checklist */
   .check-box { border: 2px solid #2D3A4A !important; background: white !important; }
 
-  /* 16. Pill/hook spans — allow wrapping */
+  /* 14. Hook pill spans */
   #brief-hooks-container span { margin-bottom: 4px !important; }
-
-  /* 17. CTA script box */
-  .cta-script { border: 1px solid #ddd !important; }
-
-  /* 18. Nav steps bar inside step sections */
-  .step-nav, .progress-bar { display: none !important; }
-
-  /* 19. Print-only note for assets */
-  .print-asset-note { display: block !important; }
-}
-
-/* Hidden in screen, shown only in print */
-.print-asset-note {
-  display: none;
-  font-size: 11px;
-  color: #556070;
-  margin-top: 8px;
-  font-style: italic;
 }
 </style>
 
