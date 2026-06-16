@@ -1415,12 +1415,7 @@ sections.forEach(function(s) { observer.observe(s); });
       }
     }
 
-    // Auto-print for PDF export
-    if (window.location.search.indexOf('print=true') > -1) {
-      window.addEventListener('load', function() {
-        setTimeout(function() { window.print(); }, 800);
-      });
-    }
+
   } catch(e) { /* invalid hash — show default brief */ }
 })();
 </script>
